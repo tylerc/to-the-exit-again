@@ -2,6 +2,33 @@ require 'rubygems'
 require 'engine'
 include Engine
 
+class Timer < Text
+	def initialize
+		super(:text => " ")
+		reset
+	end
+	
+	def update
+		@life -= 1
+		@text = (@life/@@game.fps).to_s
+		rerender
+	end
+	
+	def reset
+		@life = 15*@@game.fps
+	end
+	
+	def destroy
+		@@game.current_state.fail
+	end
+end
+
+class Level < Text
+	def initialize
+		super(:text => "")
+	end
+end
+
 class Green < GameObject
 	def initialize x=0, y=0
 		super(:width => 32, :height => 32, :x => x, :y => y, :depth => rand(3))
@@ -18,6 +45,29 @@ class Green < GameObject
 	
 	def update
 		@life -= 1
+	end
+end
+
+class Door < GameObject
+	def initialize
+		super(:width => 16, :height => 32, :x => rand(@@screen.width), :y => rand(@@screen.height), :depth => 1)
+		@surface = Rubygame::Surface.new [@width, @height]
+		@surface.draw_box [0,0], [@width-1, @height-1], [220,0,0]
+		
+		# Create the box the door sits on,
+		# and make sure it doesn't kill
+		# itself
+		@box = Green.new(@x-@width/2,@y+@height-1)
+		def @box.update
+		end
+	end
+	
+	def draw
+		@surface.blit @@screen, [@x, @y]
+	end
+	
+	def destroy
+		@box.life = 0
 	end
 end
 
@@ -82,36 +132,80 @@ class Player < Box
 				@y = obj.y-@height
 			end
 			# Bottom
-			#if @y-@yvel >= obj.y + obj.height and @x+@width > obj.x and @x < obj.x+obj.width
-			#	@y = obj.y+obj.height
-			#	@yvel = 0
-			#end
+			if @y-@yvel >= obj.y + obj.height and @x+@width > obj.x and @x < obj.x+obj.width
+				@y = obj.y+obj.height
+				@yvel = 0
+			end
+		end
+		if obj.class == Door
+			#@@game.switch_state Win.new
+			@@game.current_state.level_up
 		end
 	end
 end
 
 class InGame < State
 	def setup
-		Player.new
-=begin
-		space = 32
-		(640/space).times do |x|
-			Green.new x*space, 0
-		end
-		(640/space).times do |x|
-			Green.new x*space, @@screen.height-32
-		end
-		(480/space).times do |y|
-			Green.new 0, y*space
-		end
-		(480/space).times do |y|
-			Green.new @@screen.width-32, y*space
-		end
-=end
+		@level = 0
+		@player = Player.new
+		@door = Door.new
+		@timer = Timer.new
 	end
 	
 	def update
-		Green.new rand(@@screen.width-32), rand(@@screen.height-32)
+		greens = @objs.select do |obj|
+			obj.class == Green
+		end
+		Green.new rand(@@screen.width-32), rand(@@screen.height-32) if greens.length < @level*5
+	end
+	
+	def level
+		@level
+	end
+	
+	def level_up
+		@level += 1
+		@timer.reset
+		
+		@player.life = 0
+		@door.life = 0
+		greens = @objs.select do |obj|
+			obj.class == Green
+		end
+		greens.each { |obj| obj.life = 0 }
+		
+		@player = Player.new
+		@door = Door.new
+	end
+	
+	def fail
+		@level = 0
+		@timer = Timer.new
+		
+		@player.life = 0
+		@door.life = 0
+		greens = @objs.select do |obj|
+			obj.class == Green
+		end
+		greens.each { |obj| obj.life = 0 }
+		
+		@player = Player.new
+		@door = Door.new
+	end
+end
+
+class WinText < Text
+	def initialize
+		super(:text => "Win", :size => 380, :depth => 5)
+		@life = 255
+		center
+	end
+	
+	def update
+		@life -= 5
+		@color.length.times { |c| @color[c] = @life }
+		@depth = @life
+		rerender
 	end
 end
 
