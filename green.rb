@@ -7,7 +7,7 @@ include Engine
 
 class GameObject
 	def flicker
-		@@screen.draw_box_s [@x+rand(@width+8)-10, @y+rand(@height+8)-10], [@x+rand(@width+8), @y+rand(@height+8)], [0, 0, 0]
+		@@screen.draw_box_s([@x+rand(@width+8)-10, @y+rand(@height+8)-10], [@x+rand(@width+8), @y+rand(@height+8)], [0, 0, 0])
 	end
 end
 
@@ -28,8 +28,8 @@ class Timer < Text
 		flicker
 	end
 	
-	def reset
-		@life = 15*@@game.fps
+	def reset time=15
+		@life = time*@@game.fps
 	end
 	
 	def destroy
@@ -39,7 +39,7 @@ end
 
 class Level < Text
 	def initialize
-		super(:text => " ", :x => @@screen.width-50)
+		super(:text => " ", :x => @@screen.width-50, :depth => 5)
 	end
 	
 	def draw
@@ -154,13 +154,15 @@ class Player < Box
 end
 
 class InGame < State
+	attr_accessor :flicker
+	
 	def setup
 		escape = lambda do
 			File.open('config.yml', 'w') { |f| f.puts YAML.dump(@conf) }
 			Rubygame.quit
 			exit
 		end
-		@@game.key_press(Rubygame::K_ESCAPE, escape, @@game)
+		@@game.key_press(Rubygame::K_ESCAPE, escape, self)
 		
 		@level = 0
 		@player = Player.new
@@ -177,7 +179,10 @@ class InGame < State
 		greens = @objs.select do |obj|
 			obj.class == Green
 		end
-		Green.new rand(@@screen.width-32), rand(@@screen.height-32) if greens.length < @level*5
+		(@level*5-greens.length).times do |i|
+			Green.new rand(@@screen.width-32), rand(@@screen.height-32)
+			break if i > 5
+		end
 	end
 	
 	def level
@@ -191,7 +196,9 @@ class InGame < State
 			@@screen.title = "Green - High Score: #{@conf[:high_score]}"
 		end
 		@lev_text.text = @level.to_s
-		@timer.reset
+		@timer.reset if @level <= 20
+		@timer.reset(10) if @level >= 21
+		@timer.reset(5) if @level >= 40
 		
 		@player.life = 0
 		@door.life = 0
