@@ -68,8 +68,8 @@ class Green < GameObject
 end
 
 class Door < GameObject
-	def initialize
-		super(:width => 16, :height => 32, :x => rand(@@screen.width-50)+25, :y => rand(@@screen.height-100)+25, :depth => 1)
+	def initialize x=rand(@@screen.width-50)+25, y=rand(@@screen.height-100)+25
+		super(:width => 16, :height => 32, :x => x, :y => y, :depth => 1)
 		@surface = Rubygame::Surface.new [@width, @height]
 		@surface.draw_box [0,0], [@width-1, @height-1], [220,0,0]
 		
@@ -166,10 +166,11 @@ class InGame < State
 		
 		@level = 0
 		@player = Player.new
-		@door = Door.new
+		@door = Door.new 200, 200
 		@timer = Timer.new
 		@lev_text = Level.new
 		@lev_text.text = @level.to_s
+		@background = Image.new :image => 'media/intro.png'
 		
 		@conf = YAML.load(File.read('config.yml'))
 		@@screen.title = "Green - High Score: #{@conf[:high_score]}"
@@ -199,6 +200,7 @@ class InGame < State
 		@timer.reset if @level <= 20
 		@timer.reset(10) if @level >= 21
 		@timer.reset(5) if @level >= 40
+		@background.life = 0
 		
 		@player.life = 0
 		@door.life = 0
