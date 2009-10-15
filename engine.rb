@@ -65,6 +65,7 @@ module Engine
 			@states = []
 			@objs2 = []
 			@global_events = {:key_press => [], :key_release => [], :mouse_press => [], :mouse_release => [], :mouse_motion => [], :while_key_down => [], :while_key_up => []}
+			@state_buffer = nil
 		end
 		
 		# Adds objects to the game
@@ -215,6 +216,11 @@ module Engine
 			@current_state.objs += @objs2
 			@current_state.objs.sort! { |a,b| (a.depth or 0) <=> (b.depth or 0) } unless @objs2.empty? # Sort by depth
 			@objs2 = []
+			
+			if @state_buffer != nil
+				@state_buffer.call
+				@state_buffer = nil
+			end
 		end
 		
 		# Draws the screen
@@ -278,25 +284,30 @@ module Engine
 		#
 		# Takes a state class (initialized) as an argument
 		def switch_state state
-			@objs2 = []
-			@current_state = state
-			@current_state.setup
+			@state_buffer = Proc.new do
+				@objs2 = []
+				@current_state = state
+				@current_state.setup
+			end
 		end
 		
 		# Pops a state off the state stack and makes it the current state. (This destroys the current state)
-		def pop_state
-			@objs2 = []
-			@current_state = @states.pop
+		def pop_state	
+			@state_buffer = Proc.new do
+				@objs2 = []
+				@current_state = @states.pop
+			end
 		end
 		
 		# Pushes a new state onto the state stack
 		#
 		# Takes a state class (initialized) as an argument
 		def push_state state
-			@objs2 = []
-			@states.push @current_state
-			@current_state = state
-			@current_state.setup
+			@state_buffer = Proc.new do
+				@states.push @current_state
+				@current_state = state
+				@current_state.setup
+			end
 		end
 		
 		# Returns true if there is a collision
