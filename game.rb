@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'yaml'
 
-require 'engine'
+require 'dev/engine'
 include Engine
 
 class GameObject
@@ -13,7 +13,7 @@ end
 
 class Timer < Text
 	def initialize
-		super(:text => " ", :depth => 5)
+		super(:text => " ", :depth => 5, :font => 'media/FreeSans.ttf')
 		reset
 	end
 	
@@ -39,7 +39,7 @@ end
 
 class Level < Text
 	def initialize
-		super(:text => " ", :x => @@screen.width-50, :depth => 5)
+		super(:text => " ", :x => @@screen.width-50, :depth => 5, :font => 'media/FreeSans.ttf')
 	end
 	
 	def draw
