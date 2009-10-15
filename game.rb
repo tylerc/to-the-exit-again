@@ -177,6 +177,7 @@ class InGame < State
 		@player = Player.new
 		@door = Door.new 200, 200
 		@timer = Timer.new
+		@timer.reset(60)
 		@lev_text = Level.new
 		@lev_text.text = @level.to_s
 		@background = Image.new :image => 'media/intro.png'
