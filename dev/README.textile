@@ -65,5 +65,9 @@ M - Toggle Music
 
 h3. Get to the exit!
 
+h2. Music
+
+The music is "UK Underground by MegaWatt-Man":http://www.newgrounds.com/audio/listen/280249
+
 </div>
 </div>
