@@ -1,5 +1,7 @@
+* Score/Level
+* Door should start at right place (Top of screen ['bout 200px], not off screen)
+
+* High Score (save + title)
+
 * Intro Screen
 * Music
-* Score
-* High Score
-* Door should start at right place (Top of screen ['bout 200px], not off screen)
