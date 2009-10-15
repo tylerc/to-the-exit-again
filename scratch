@@ -1,0 +1,17 @@
+This is a file of code that gets commented out and clutters my files, but may be useful later
+
+green.rb, inside InGame.setup:
+# Draws a border of Green objects
+space = 32
+(640/space).times do |x|
+	Green.new x*space, 0
+end
+(640/space).times do |x|
+	Green.new x*space, @@screen.height-32
+end
+(480/space).times do |y|
+	Green.new 0, y*space
+end
+(480/space).times do |y|
+	Green.new @@screen.width-32, y*space
+end
