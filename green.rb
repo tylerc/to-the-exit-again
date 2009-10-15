@@ -66,7 +66,7 @@ end
 
 class Door < GameObject
 	def initialize
-		super(:width => 16, :height => 32, :x => rand(@@screen.width), :y => rand(@@screen.height), :depth => 1)
+		super(:width => 16, :height => 32, :x => rand(@@screen.width-50)+25, :y => rand(@@screen.height-100)+25, :depth => 1)
 		@surface = Rubygame::Surface.new [@width, @height]
 		@surface.draw_box [0,0], [@width-1, @height-1], [220,0,0]
 		
