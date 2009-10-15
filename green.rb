@@ -2,9 +2,15 @@ require 'rubygems'
 require 'engine'
 include Engine
 
+class GameObject
+	def flicker
+		@@screen.draw_box_s [@x+rand(@width+8)-10, @y+rand(@height+8)-10], [@x+rand(@width+8), @y+rand(@height+8)], [0, 0, 0]
+	end
+end
+
 class Timer < Text
 	def initialize
-		super(:text => " ")
+		super(:text => " ", :depth => 5)
 		reset
 	end
 	
@@ -12,6 +18,11 @@ class Timer < Text
 		@life -= 1
 		@text = (@life/@@game.fps).to_s
 		rerender
+	end
+	
+	def draw
+		super
+		flicker
 	end
 	
 	def reset
@@ -25,7 +36,12 @@ end
 
 class Level < Text
 	def initialize
-		super(:text => "")
+		super(:text => " ", :x => @@screen.width-50)
+	end
+	
+	def draw
+		super
+		flicker
 	end
 end
 
@@ -34,13 +50,13 @@ class Green < GameObject
 		super(:width => 32, :height => 32, :x => x, :y => y, :depth => rand(3))
 		@surface = Rubygame::Surface.new [@width, @height]
 		@surface.draw_box [0,0], [@width-1, @height-1], [0,220,0]
-		@life = 100
+		@life = rand(200)+1
 	end
 	
 	def draw
 		@surface.draw_box [0,0], [@width-1, @height-1], [0,220-rand(100),0] if rand(50) == 0
 		@surface.blit @@screen, [@x, @y]
-		@@screen.draw_box_s [@x+rand(@width+8)-10, @y+rand(@height+8)-10], [@x+rand(@width+8), @y+rand(@height+8)], [0, 0, 0]
+		flicker
 	end
 	
 	def update
@@ -64,6 +80,7 @@ class Door < GameObject
 	
 	def draw
 		@surface.blit @@screen, [@x, @y]
+		flicker
 	end
 	
 	def destroy
@@ -112,16 +129,6 @@ class Player < Box
 	
 	def collision obj
 		if obj.class == Green
-			# Left
-			#if @x+@width-@speed <= obj.x 
-			#	@x = obj.x-@width
-			#	@col_left = true
-			#end
-			# Right
-			#if  @x+@speed >= obj.x+obj.width# and @y+@height >= obj.y+obj.height
-			#	@x = obj.x+obj.width
-			#	@col_right = true
-			#end
 			# Top
 			if @y+@height-@yvel <= obj.y and @x+@width > obj.x and @x < obj.x+obj.width
 				if @hit == false
@@ -138,7 +145,6 @@ class Player < Box
 			end
 		end
 		if obj.class == Door
-			#@@game.switch_state Win.new
 			@@game.current_state.level_up
 		end
 	end
@@ -150,6 +156,8 @@ class InGame < State
 		@player = Player.new
 		@door = Door.new
 		@timer = Timer.new
+		@lev_text = Level.new
+		@lev_text.text = @level.to_s
 	end
 	
 	def update
@@ -165,6 +173,7 @@ class InGame < State
 	
 	def level_up
 		@level += 1
+		@lev_text.text = @level.to_s
 		@timer.reset
 		
 		@player.life = 0
@@ -180,6 +189,7 @@ class InGame < State
 	
 	def fail
 		@level = 0
+		@lev_text.text = @level.to_s
 		@timer = Timer.new
 		
 		@player.life = 0
@@ -191,21 +201,6 @@ class InGame < State
 		
 		@player = Player.new
 		@door = Door.new
-	end
-end
-
-class WinText < Text
-	def initialize
-		super(:text => "Win", :size => 380, :depth => 5)
-		@life = 255
-		center
-	end
-	
-	def update
-		@life -= 5
-		@color.length.times { |c| @color[c] = @life }
-		@depth = @life
-		rerender
 	end
 end
 

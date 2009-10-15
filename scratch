@@ -15,3 +15,31 @@ end
 (480/space).times do |y|
 	Green.new @@screen.width-32, y*space
 end
+
+Player collision code, with commented out parts intact:
+if obj.class == Green
+			# Left
+			#if @x+@width-@speed <= obj.x 
+			#	@x = obj.x-@width
+			#	@col_left = true
+			#end
+			# Right
+			#if  @x+@speed >= obj.x+obj.width# and @y+@height >= obj.y+obj.height
+			#	@x = obj.x+obj.width
+			#	@col_right = true
+			#end
+			# Top
+			if @y+@height-@yvel <= obj.y and @x+@width > obj.x and @x < obj.x+obj.width
+				if @hit == false
+					@hit = true
+					@yvel = 0
+				end
+				@col_top = true
+				@y = obj.y-@height
+			end
+			# Bottom
+			if @y-@yvel >= obj.y + obj.height and @x+@width > obj.x and @x < obj.x+obj.width
+				@y = obj.y+obj.height
+				@yvel = 0
+			end
+		end
