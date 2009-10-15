@@ -1,4 +1,6 @@
 require 'rubygems'
+require 'yaml'
+
 require 'engine'
 include Engine
 
@@ -152,12 +154,22 @@ end
 
 class InGame < State
 	def setup
+		escape = lambda do
+			File.open('config.yml', 'w') { |f| f.puts YAML.dump(@conf) }
+			Rubygame.quit
+			exit
+		end
+		@@game.key_press(Rubygame::K_ESCAPE, escape, @@game)
+		
 		@level = 0
 		@player = Player.new
 		@door = Door.new
 		@timer = Timer.new
 		@lev_text = Level.new
 		@lev_text.text = @level.to_s
+		
+		@conf = YAML.load(File.read('config.yml'))
+		@@screen.title = "Green - High Score: #{@conf[:high_score]}"
 	end
 	
 	def update
@@ -173,6 +185,10 @@ class InGame < State
 	
 	def level_up
 		@level += 1
+		if @level > @conf[:high_score]
+			@conf[:high_score] = @level
+			@@screen.title = "Green - High Score: #{@conf[:high_score]}"
+		end
 		@lev_text.text = @level.to_s
 		@timer.reset
 		
@@ -206,6 +222,5 @@ end
 
 # Start the game!
 game = Game.new :title => "Green", :width => 640, :height => 480, :fps => 30
-game.key_press(Rubygame::K_ESCAPE, lambda {Rubygame.quit ; exit}, game)
 game.switch_state InGame.new
 game.run
