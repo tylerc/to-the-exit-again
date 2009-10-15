@@ -162,7 +162,16 @@ class InGame < State
 			Rubygame.quit
 			exit
 		end
+		music = lambda do
+			if @music.playing?
+				@music.pause
+			else
+				@music.unpause
+			end
+			
+		end
 		@@game.key_press(Rubygame::K_ESCAPE, escape, self)
+		@@game.key_press(Rubygame::K_M, music, self)
 		
 		@level = 0
 		@player = Player.new
@@ -171,12 +180,15 @@ class InGame < State
 		@lev_text = Level.new
 		@lev_text.text = @level.to_s
 		@background = Image.new :image => 'media/intro.png'
+		@music = Rubygame::Music.load 'media/song.ogg'
+		@music.play
 		
 		@conf = YAML.load(File.read('config.yml'))
 		@@screen.title = "Green - High Score: #{@conf[:high_score]}"
 	end
 	
 	def update
+		@music.play if @music.stopped?
 		greens = @objs.select do |obj|
 			obj.class == Green
 		end
