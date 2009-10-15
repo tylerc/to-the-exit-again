@@ -6,7 +6,7 @@ h1(title). To The Exit... Again
 
 h2(author). Written by: Tyler Church
 
-h2(version). Version: final1-linux
+h2(version). Version: final1-windows
 </div>
 <div class='license'>
 h2. License
@@ -46,9 +46,9 @@ h2. Running The Game
 
 To run the game use the command:
 
-@sh game.sh@
+@game.bat@
 
-Or you can double click on game.sh
+Or you can double click on game.bat
 
 h2. Playing the Game
 
