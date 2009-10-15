@@ -244,6 +244,10 @@ class InGame < State
 end
 
 # Start the game!
-game = Game.new :title => "To The Exit... Again", :width => 640, :height => 480, :fps => 30
+conf = YAML.load(File.read('config.yml'))
+flags = [Rubygame::HWSURFACE, Rubygame::DOUBLEBUF, Rubygame::FULLSCREEN] if conf[:fullscreen]
+flags = [Rubygame::HWSURFACE, Rubygame::DOUBLEBUF] if !conf[:fullscreen]
+
+game = Game.new :title => "To The Exit... Again", :width => 640, :height => 480, :fps => 30, :flags => flags
 game.switch_state InGame.new
 game.run

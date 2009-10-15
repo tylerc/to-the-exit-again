@@ -65,6 +65,14 @@ M - Toggle Music
 
 h3. Get to the exit!
 
+If you would like to play in fullscreen, open up config.yml and change:
+
+@:fullscreen: false@
+
+to
+
+@:fullscreen: true@
+
 h2. Music
 
 The music is "UK Underground by MegaWatt-Man":http://www.newgrounds.com/audio/listen/280249
