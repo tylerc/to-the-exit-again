@@ -185,7 +185,7 @@ class InGame < State
 		@music.play
 		
 		@conf = YAML.load(File.read('config.yml'))
-		@@screen.title = "Green - High Score: #{@conf[:high_score]}"
+		@@screen.title = "To The Exit... Again - High Score: #{@conf[:high_score]}"
 	end
 	
 	def update
@@ -207,7 +207,7 @@ class InGame < State
 		@level += 1
 		if @level > @conf[:high_score]
 			@conf[:high_score] = @level
-			@@screen.title = "Green - High Score: #{@conf[:high_score]}"
+			@@screen.title = "To The Exit... Again - High Score: #{@conf[:high_score]}"
 		end
 		@lev_text.text = @level.to_s
 		@timer.reset if @level <= 20
@@ -244,6 +244,6 @@ class InGame < State
 end
 
 # Start the game!
-game = Game.new :title => "Green", :width => 640, :height => 480, :fps => 30
+game = Game.new :title => "To The Exit... Again", :width => 640, :height => 480, :fps => 30
 game.switch_state InGame.new
 game.run
