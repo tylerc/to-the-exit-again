@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'yaml'
 
-require 'dev/engine'
+require File.expand_path(File.dirname(__FILE__))[0..-4] + 'dev/engine'
 include Engine
 
 class GameObject

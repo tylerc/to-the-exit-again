@@ -6,7 +6,7 @@ h1(title). To The Exit... Again
 
 h2(author). Written by: Tyler Church
 
-h2(version). Version: final1
+h2(version). Version: final1-linux
 </div>
 <div class='license'>
 h2. License
@@ -44,16 +44,11 @@ This is a simple game. All you have to do is get to the exit!
 
 h2. Running The Game
 
-(Note: This game is tested and developed on Linux with Ruby 1.8.7)
-You need Rubygame installed (see below) to play the game
 To run the game use the command:
 
-@ruby game.rb@
+@sh game.sh@
 
-h2. Installing Rubygame
-
-"Mac and Windows Instructions":http://docs.rubygame.org/rdoc/current/
-"Ubuntu/Debian Instructions":http://rubygame.org/wiki/Debian_based_GNU/Linux_Distro_Installation_Guide
+Or you can double click on game.sh
 
 h2. Playing the Game
 
