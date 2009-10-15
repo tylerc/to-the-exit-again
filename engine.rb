@@ -318,7 +318,7 @@ module Engine
 	# * Life - when this reaches 0 the GameObject is deleted by the Engine
 	# * x and y positions on the screen
 	# * width and height - Used for collision detection
-	# * Depth - What's drawn on top of what. Lower the number, higher it's drawn. Default is zero
+	# * Depth - What's drawn on top of what. Lower the number, the lower it's drawn. Default is zero
 	#
 	# Take a careful look at the settings GameObject provides,
 	# nowhere will the documentation repeat the basic options, so
