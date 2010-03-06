@@ -128,6 +128,13 @@ class Player < Box
 		@col_left = false
 		@col_right = false
 		@col_top = false
+		
+		@@game.current_state.objs.each do |obj|
+			unless @@game.collision_between(self, obj)
+				next
+			end
+			collision obj
+		end
 	end
 	
 	def collision obj
