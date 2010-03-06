@@ -161,8 +161,6 @@ class Player < Box
 end
 
 class InGame < State
-	attr_accessor :flicker
-	
 	def setup
 		escape = lambda do
 			File.open('config.yml', 'w') { |f| f.puts YAML.dump(@conf) }
