@@ -160,6 +160,19 @@ class Player < Box
 	end
 end
 
+class Pause < State
+	def initialize music
+		@music = music
+		super()
+	end
+	
+	def setup
+		@@game.key_press(Rubygame::K_P, lambda { @music.call ; @@game.pop_state }, self)
+		text = Text.new :text => "Paused", :size => 50, :font => 'media/FreeSans.ttf'
+		text.center
+	end
+end
+
 class InGame < State
 	def setup
 		escape = lambda do
@@ -173,10 +186,10 @@ class InGame < State
 			else
 				@music.unpause
 			end
-			
 		end
 		@@game.key_press(Rubygame::K_ESCAPE, escape, self)
 		@@game.key_press(Rubygame::K_M, music, self)
+		@@game.key_press(Rubygame::K_P, lambda { music.call ; @@game.push_state(Pause.new(music)) }, self)
 		
 		@level = 0
 		@player = Player.new
