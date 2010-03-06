@@ -6,12 +6,12 @@ h1(title). To The Exit... Again
 
 h2(author). Written by: Tyler Church
 
-h2(version). Version: final1-linux
+h2(version). Version: final1.1-linux
 </div>
 <div class='license'>
 h2. License
 
-Copyright (C) 2009 Tyler Church
+Copyright (C) 2009-2010 Tyler Church
 
 This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
 
@@ -57,6 +57,7 @@ All controls are mentioned in the game, but here they are anyway:
 Up - Jump
 Left+Right - Move Left+Right
 M - Toggle Music
+P - Pause
 
 h3. Get to the exit!
 

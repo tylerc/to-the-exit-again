@@ -104,15 +104,15 @@ module Engine
 				end
 			end
 			
-			@current_state.objs.each do |obj|
-				@current_state.objs[@current_state.objs.index(obj)+1..-1].each do |obj2|
-					unless collision_between(obj, obj2)
-						next
-					end
-					obj.collision obj2
-					obj2.collision obj
-				end
-			end
+			#@current_state.objs.each do |obj|
+			#	@current_state.objs[@current_state.objs.index(obj)+1..-1].each do |obj2|
+			#		unless collision_between(obj, obj2)
+			#			next
+			#		end
+			#		obj.collision obj2
+			#		obj2.collision obj
+			#	end
+			#end
 		
 			@queue.each do |ev|
 				case ev
